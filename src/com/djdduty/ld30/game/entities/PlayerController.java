@@ -13,9 +13,22 @@ import com.djdduty.ld30.scene.entity.Projectile;
 public class PlayerController extends EntityController {
 	int numProjectiles = 0;
 	private float shootTimer = 0;
-	public float shootDelay = 1;
 	
-	public int damage = 10;
+	public float shootDelay = 1;
+	private int fireRateLevel = 1;
+	private int fireRateCost = 100;
+	
+	private int damage = 10;
+	private int damageLevel = 1;
+	private int damageCost = 100;
+	
+	private int maxHealth = 100;
+	private int healthLevel = 1;
+	private int healthCost = 100;
+	
+	private float acceleration = 100;
+	private int accelerationLevel = 1;
+	private int accelerationCost = 100;
 	
 	public PlayerController() {
 	}
@@ -28,17 +41,17 @@ public class PlayerController extends EntityController {
 		vel.x(owner.getVelocity().x() - (owner.getVelocity().x()*(0.5f*deltInSeconds)));
 		vel.y(owner.getVelocity().y() - (owner.getVelocity().y()*(0.5f*deltInSeconds)));
 		if(Keyboard.isKeyDown(Keyboard.KEY_LEFT) || Keyboard.isKeyDown(Keyboard.KEY_A))
-			vel.x(vel.x() + -(160.0f*deltInSeconds));
+			vel.x(vel.x() + -(acceleration*deltInSeconds));
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT) || Keyboard.isKeyDown(Keyboard.KEY_D))
-			vel.x(vel.x() + (160.0f*deltInSeconds));
+			vel.x(vel.x() + (acceleration*deltInSeconds));
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_UP) || Keyboard.isKeyDown(Keyboard.KEY_W)) {
-			vel.y(vel.y() + -(160.0f*deltInSeconds));
+			vel.y(vel.y() + -(acceleration*deltInSeconds));
 		}
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_DOWN) || Keyboard.isKeyDown(Keyboard.KEY_S)) {
-			vel.y(vel.y() + (160.0f*deltInSeconds));
+			vel.y(vel.y() + (acceleration*deltInSeconds));
 		}
 		
 		if(Mouse.isButtonDown(0) && shootTimer >= shootDelay) {
@@ -91,5 +104,79 @@ public class PlayerController extends EntityController {
 	
 	public void onHurt(CollisionEvent event) {
 		Engine.get().getSoundManager().getSound("hurt").playAsSoundEffect(1, 1, false);
+	}
+	
+	public int getHealCost() {
+		return (int)(owner.getMaxHealth() * 0.1);
+	}
+	
+	public int getHealthUpCost() {
+		return healthCost;
+	}
+	
+	public void heal() {
+		if(owner.score >= getHealCost()) {
+			Engine.get().getSoundManager().getSound("powerup").playAsSoundEffect(1, 1, false);
+			owner.heal((int)(owner.getMaxHealth()*0.1));
+			owner.score -= getHealCost();
+		} else {
+			Engine.get().getSoundManager().getSound("fail").playAsSoundEffect(1, 1, false);
+		}
+	}
+	
+	public void upHealth() {
+		if(owner.score >= healthCost) {
+			Engine.get().getSoundManager().getSound("powerup").playAsSoundEffect(1, 1, false);
+			owner.setHealth((int)owner.getHealth(), (int)(owner.getMaxHealth()*1.5));
+			owner.score -= getHealthUpCost();
+			healthCost *= 1.5;
+		} else {
+			Engine.get().getSoundManager().getSound("fail").playAsSoundEffect(1, 1, false);
+		}
+	}
+
+	public int getAccUpCost() {
+		return accelerationCost;
+	}
+	
+	public void upAcc() {
+		if(owner.score >= accelerationCost) {
+			Engine.get().getSoundManager().getSound("powerup").playAsSoundEffect(1, 1, false);
+			acceleration += 20;
+			owner.score -= getAccUpCost();
+			accelerationCost *= 1.5;
+		} else {
+			Engine.get().getSoundManager().getSound("fail").playAsSoundEffect(1, 1, false);
+		}
+	}
+	
+	public int getFireRateUpCost() {
+		return fireRateCost;
+	}
+	
+	public void upFireRate() {
+		if(owner.score >= fireRateCost) {
+			Engine.get().getSoundManager().getSound("powerup").playAsSoundEffect(1, 1, false);
+			shootDelay *= 0.9;
+			owner.score -= getFireRateUpCost();
+			fireRateCost *= 1.5;
+		} else {
+			Engine.get().getSoundManager().getSound("fail").playAsSoundEffect(1, 1, false);
+		}
+	}
+	
+	public int getDamageUpCost() {
+		return damageCost;
+	}
+	
+	public void upDamage() {
+		if(owner.score >= damageCost) {
+			Engine.get().getSoundManager().getSound("powerup").playAsSoundEffect(1, 1, false);
+			damage += 10;
+			owner.score -= getDamageUpCost();
+			damageCost *= 1.5;
+		} else {
+			Engine.get().getSoundManager().getSound("fail").playAsSoundEffect(1, 1, false);
+		}
 	}
 }

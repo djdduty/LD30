@@ -31,7 +31,7 @@ public class Entity {
     
     public boolean isProjectile = false;
     public boolean isDead = false;
-    private int score = 0;
+    public int score = 0;
     
     public boolean isCollidable = true;
 
@@ -69,7 +69,7 @@ public class Entity {
     	    if(controller != null)
     	    	controller.update(deltaTime);
 	  
-	    	if(velocity.x() != 0) {
+	    	if(velocity.x() != 0 && scene != null) {
 	    		float oldX = position.x();
 		    	position.x(position.x() + (velocity.x()*(deltaTime*0.001f)));
 		    	Entity e = scene.checkCollision(this);
@@ -82,7 +82,7 @@ public class Entity {
 		    	}
 	    	}
 	    	
-	    	if(velocity.y() != 0) {
+	    	if(velocity.y() != 0 && scene != null) {
 	    		float oldY = position.y();
 		    	position.y(position.y() + (velocity.y()*(deltaTime*0.001f)));
 		    	Entity e = scene.checkCollision(this);
@@ -255,5 +255,15 @@ public class Entity {
 	public void setHealth(int health, int max) {
 		this.health = health;
 		this.maxHealth = max;
+	}
+
+	public double getMaxHealth() {
+		return this.maxHealth;
+	}
+
+	public void heal(int i) {
+		this.health += i;
+		if(health > maxHealth)
+			health = maxHealth;
 	}
 }

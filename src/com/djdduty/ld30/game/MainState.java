@@ -40,6 +40,7 @@ public class MainState implements State {
 		Engine.get().getTextureManager().getTexture("copter", "res/textures/Copter.png");
 		Engine.get().getTextureManager().getTexture("bridge", "res/textures/bridge.png");
 		Engine.get().getTextureManager().getTexture("bg", "res/textures/background.png");
+		Engine.get().getTextureManager().getTexture("menubg", "res/textures/menubg.png");
 		Engine.get().getTextureManager().getTexture("truck", "res/textures/brute.png");
 		//
 				
@@ -64,6 +65,8 @@ public class MainState implements State {
 			Engine.get().getSoundManager().getSound("shoot", "res/sounds/shoot.wav");
 			Engine.get().getSoundManager().getSound("hurt", "res/sounds/hurt.wav");
 			Engine.get().getSoundManager().getSound("explosion", "res/sounds/explosion.wav");
+			Engine.get().getSoundManager().getSound("powerup", "res/sounds/powerup.wav");
+			Engine.get().getSoundManager().getSound("fail", "res/sounds/fail.wav");
 		} catch (Throwable exc) {
 			exc.printStackTrace();
 		}
