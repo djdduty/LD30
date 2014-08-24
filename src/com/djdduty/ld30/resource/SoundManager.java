@@ -34,7 +34,7 @@ public class SoundManager {
 			path = path.substring(1);
 		
 		try {
-			return AudioLoader.getAudio(path.substring(path.lastIndexOf('.')+1).toUpperCase().trim(), SoundManager.class.getClassLoader().getResourceAsStream(path));
+			return AudioLoader.getAudio(path.substring(path.lastIndexOf('.')+1).toUpperCase().trim(), getClass().getClassLoader().getResourceAsStream(path));
 		} catch (Exception exc) {
 			exc.printStackTrace();
 			return null;

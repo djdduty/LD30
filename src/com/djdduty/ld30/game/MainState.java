@@ -71,13 +71,13 @@ public class MainState implements State {
 		
 		//Load audio for entire game
 		try {
-			Engine.get().getSoundManager().getSound("music", "res/sounds/music2.wav").playAsMusic(1, 1, true);
-			Engine.get().getSoundManager().getSound("menuSelect", "res/sounds/menuSelect.wav");
-			Engine.get().getSoundManager().getSound("shoot", "res/sounds/shoot.wav");
-			Engine.get().getSoundManager().getSound("hurt", "res/sounds/hurt.wav");
-			Engine.get().getSoundManager().getSound("explosion", "res/sounds/explosion.wav");
-			Engine.get().getSoundManager().getSound("powerup", "res/sounds/powerup.wav");
-			Engine.get().getSoundManager().getSound("fail", "res/sounds/fail.wav");
+			Engine.get().getSoundManager().getSound("music", "res/sounds/music2.ogg").playAsMusic(1, 1, true);
+			Engine.get().getSoundManager().getSound("menuSelect", "res/sounds/menuSelect.ogg");
+			Engine.get().getSoundManager().getSound("shoot", "res/sounds/shoot.ogg");
+			Engine.get().getSoundManager().getSound("hurt", "res/sounds/hurt.ogg");
+			Engine.get().getSoundManager().getSound("explosion", "res/sounds/explosion.ogg");
+			Engine.get().getSoundManager().getSound("powerup", "res/sounds/powerup.ogg");
+			Engine.get().getSoundManager().getSound("fail", "res/sounds/fail.ogg");
 		} catch (Throwable exc) {
 			exc.printStackTrace();
 		}
