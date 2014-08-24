@@ -13,7 +13,7 @@ import com.djdduty.ld30.gui.Font;
 import com.djdduty.ld30.gui.FontString;
 import com.djdduty.ld30.math.Vec2;
 
-public class UpgradeMenu implements SubState {
+public class PauseMenu implements SubState {
 	private Font font;
 	private FontString mainLabel;
 	private StateManager manager;
@@ -26,17 +26,10 @@ public class UpgradeMenu implements SubState {
 	private boolean updateLabels = true;
 	private boolean keyDown = false;
 	private boolean spaceDown = true;
+	private boolean escDown = true;
 	
-	private PlayerController player;
-	
-	public UpgradeMenu(GameState s, PlayerController player) {
+	public PauseMenu(GameState s) {
 		state = s;
-		this.player = player;
-	}
-	
-	public UpgradeMenu(GameState s, PlayerController player, int selectedIndex) {
-		this(s, player);
-		this.selectedIndex = selectedIndex;
 	}
 	
 	public void init(StateManager manager) {
@@ -48,17 +41,14 @@ public class UpgradeMenu implements SubState {
 		//
 		
 		//Add menu options
-		labels.add(new FontString("Heal(Cost:"+player.getHealCost()+")", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2-35), new Vec2(30,30), font, true));
-		labels.add(new FontString("Max Health++(Cost:"+player.getHealthUpCost()+")", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2), new Vec2(30,30), font, true));
-		labels.add(new FontString("Acceleration++(Cost:"+player.getAccUpCost()+")", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+35), new Vec2(30,30), font, true));
-		labels.add(new FontString("Fire Rate++(Cost:"+player.getFireRateUpCost()+")", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+70), new Vec2(30,30), font, true));
-		labels.add(new FontString("Damage++(Cost:"+player.getDamageUpCost()+")", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+105), new Vec2(30,30), font, true));
-		labels.add(new FontString("Go Back", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+145), new Vec2(30,30), font, true));
+		labels.add(new FontString("Resume", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2-35), new Vec2(30,30), font, true));
+		labels.add(new FontString("Exit to menu", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2), new Vec2(30,30), font, true));
+		labels.add(new FontString("Quit", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+35), new Vec2(30,30), font, true));
 		//
 		
 		//other
-		mainLabel = new FontString("Upgrades!", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2-100), new Vec2(60,60), font, true);
-		backgroundEntity = new GameEntity(new Vec2(40, Engine.get().getHeight()/2-125), "popupBGEntity", new Vec2(720, 300));
+		mainLabel = new FontString("Paused!", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2-100), new Vec2(60,60), font, true);
+		backgroundEntity = new GameEntity(new Vec2(150, Engine.get().getHeight()/2-125), "popupBGEntity", new Vec2(500, 200));
 		backgroundEntity.init(null);
 		backgroundEntity.mass = 0.0f;
 		backgroundEntity.getRenderable().getMaterial().setDiffuseTexture("menubg");
@@ -113,31 +103,29 @@ public class UpgradeMenu implements SubState {
 		for(FontString s : labels)
 			s.queueForRender();
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !escDown) {
 			state.menuOpen = false;
 			state.escDown = true;
 			manager.clearSubState();
 		}
 		
+		if(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE))
+			escDown = false;
+		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !spaceDown) {
 			spaceDown = true;
-			if(selectedIndex == 0)
-				player.heal();
-			if(selectedIndex == 1)
-				player.upHealth();
-			if(selectedIndex == 2)
-				player.upAcc();
-			if(selectedIndex == 3)
-				player.upFireRate();
-			if(selectedIndex == 4)
-				player.upDamage();
-			if(selectedIndex == 5) {
+			if(selectedIndex == 0) {
 				state.menuOpen = false;
 				state.spaceDown = true;
+				state.escDown = true;
 				manager.clearSubState();
-			} else {
-				manager.setSubState(new UpgradeMenu(state, player, selectedIndex));
 			}
+			if(selectedIndex == 1) {
+				manager.clearSubState();
+				manager.setState(new MainState(true));
+			}
+			if(selectedIndex == 2)
+				Engine.get().GetGameWindow().Stop();
 		}
 		
 		if(!Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {

@@ -9,12 +9,17 @@ import com.djdduty.ld30.scene.entity.EntityController;
 public class BruteController extends EntityController {
 	private float animationTimer = 0;
 	private int frame = 0;
+	private int numBrutes = 0;
+	private float speed = 100.0f;
 	
-	public BruteController() {
+	public BruteController(int nc) {
+		numBrutes = nc;
 	}
 	
 	public void onInit() {
-		owner.setHealth(20, 20);
+		int add = numBrutes*2;
+		owner.setHealth(10+(add*2), 10+(add*2));
+		speed += add;
 	}
 	
 	public void onUpdate(float deltaTime) {
@@ -32,7 +37,7 @@ public class BruteController extends EntityController {
 		
 		
 		if(!owner.isDead)
-			vel.x(-100.0f);
+			vel.x(-speed);
 		else
 			owner.deInit();
 		

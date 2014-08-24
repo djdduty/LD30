@@ -53,7 +53,7 @@ void main()
         Color = DiffuseColor;
     }
 
-    if(Color.a < 0.5) {
+    if(Color.a < 0.1) {
         discard;
     }
 

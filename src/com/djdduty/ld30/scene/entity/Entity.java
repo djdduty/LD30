@@ -117,6 +117,8 @@ public class Entity {
             die(event);
         if(health >= maxHealth)
             health = maxHealth;
+        
+        //System.out.println(name+" got hurt for "+event.damage+" new health: "+health);
     }
 
     private final void die(CollisionEvent event) {

@@ -18,13 +18,22 @@ public class CopterController extends EntityController {
 	public float shootDelay = 2;
 	private float animationTimer = 0;
 	private int frame = 0;
+	private int numCopters = 0;
 	
-	public CopterController(GameEntity player) {
+	private float acceleration = 80;
+	private float topSpeed = 100;
+	
+	public CopterController(GameEntity player, int nc) {
 		this.player = player;
+		numCopters = nc;
 	}
 	
 	public void onInit() {
-		owner.setHealth(20, 20);
+		int add = numCopters * 5;
+		owner.setHealth(30+add, 30+add);
+		damage += numCopters;
+		acceleration += add*0.5f;
+		topSpeed += add*0.5f;
 	}
 	
 	public void onUpdate(float deltaTime) {
@@ -46,7 +55,7 @@ public class CopterController extends EntityController {
 		if(!owner.isDead) {
 			vel.x(owner.getVelocity().x() - (owner.getVelocity().x()*(0.5f*deltInSeconds)));
 			vel.y(owner.getVelocity().y() - (owner.getVelocity().y()*(0.5f*deltInSeconds)));
-				vel.x(vel.x() + -(80.0f*deltInSeconds));
+				vel.x(vel.x() + -(acceleration*deltInSeconds));
 				
 			if(shootTimer >= shootDelay) {
 				Vec2 direction = new Vec2();
@@ -84,8 +93,8 @@ public class CopterController extends EntityController {
 			owner.deInit();
 		}
 		
-		if(vel.x() <= -100)
-			vel.x(-100);
+		if(vel.x() <= -topSpeed)
+			vel.x(-topSpeed);
 		
 		owner.setVelocity(vel);
 	}

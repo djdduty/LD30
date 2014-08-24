@@ -57,6 +57,7 @@ public class GameState implements State {
 	
 	private StateManager manager;
 	public boolean spaceDown = false;
+	public boolean escDown = false;
 	
 	
 	public void init(StateManager manager) {
@@ -71,7 +72,7 @@ public class GameState implements State {
 		healthLabel = new FontString("Health:100/100", new Vec2(0,30), new Vec2(30,30), font, false);
 		strikeLabel = new FontString("Strikes:0", new Vec2(0,60), new Vec2(30,30), font, false);
 		lostLabel = new FontString("You lost! Final score:", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2), new Vec2(40,40), font, true);
-		infoLabel = new FontString("Press space to acces shop.", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2-150), new Vec2(36,36), font, true);
+		infoLabel = new FontString("Press space to access shop.", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2-150), new Vec2(36,36), font, true);
 		lostHelpLabel = new FontString("Press space to try again.", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2+30), new Vec2(24,24), font, true);
 		//
 		
@@ -96,7 +97,7 @@ public class GameState implements State {
 		upgradeEntity.mass = 0.0f;
 		upgradeEntity.setHealth(2000000000, 2000000000);
 		upgradeEntity.init(scene);
-		upgradeEntity.getRenderable().getMaterial().setDiffuseTexture("test");
+		upgradeEntity.getRenderable().getMaterial().setDiffuseTexture("shop");
 		//
 	}
 
@@ -175,38 +176,49 @@ public class GameState implements State {
 		
 		if(!Keyboard.isKeyDown(Keyboard.KEY_SPACE))
 			spaceDown = false;
+		
+		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) && !menuOpen && !escDown) {
+			manager.setSubState(new PauseMenu(this));
+			menuOpen = true;
+			escDown = true;
+			Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
+		}
+		
+		if(!Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)) {
+			escDown = false;
+		}
 	}
 	
 	private void showUpgradeMenu() {
 		manager.setSubState(new UpgradeMenu(this, playerCont));
+		Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
 		menuOpen = true;
 	}
 	
 	private void createBrute() {
-		numBrutes++;
-		GameEntity brute = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-128, 500-128), "Brute"+numBrutes, new Vec2(128, 128), new BruteController());
+		GameEntity brute = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-128, 500-128), "Brute"+numBrutes, new Vec2(128, 128), new BruteController(numBrutes));
 		brute.setHealth(20, 20);
 		brute.mass = 0.0f;
 		mobs.add(brute);
 		brute.init(scene);
 		brute.getRenderable().getMaterial().setDiffuseTexture("truck");
+		numBrutes++;
 		
-		bruteDelay = lastBruteDelay*0.95f;
+		bruteDelay = lastBruteDelay*0.98f;
 		if(bruteDelay < 2)
 			bruteDelay = 2;
 		lastBruteDelay = bruteDelay;
 	}
 	
 	private void createCopter() {
-		numCopters++;
-		GameEntity copter = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-40, (int)(Math.random()*300)+100-128), "Copter"+numCopters, new Vec2(128, 128), new CopterController(playerEntity));
-		copter.setHealth(100, 100);
+		GameEntity copter = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-40, (int)(Math.random()*300)+100-128), "Copter"+numCopters, new Vec2(128, 128), new CopterController(playerEntity, numCopters));
 		copter.mass = 0.0f;
 		mobs.add(copter);
 		copter.init(scene);
 		copter.getRenderable().getMaterial().setDiffuseTexture("copter");
+		numCopters++;
 		
-		copterDelay = lastCopterDelay*0.95f;
+		copterDelay = lastCopterDelay*0.98f;
 		if(copterDelay < 10)
 			copterDelay = 10;
 		lastCopterDelay = copterDelay;

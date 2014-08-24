@@ -90,4 +90,8 @@ public class FontString {
 		letterSize = newSize;
 		constructBuffer();
 	}
+
+	public Renderable getRenderable() {
+		return this.renderable;
+	}
 }

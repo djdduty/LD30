@@ -30,6 +30,15 @@ public class MainState implements State {
 	
 	private StateManager manager;
 	private GameEntity backgroundEntity;
+	private boolean spaceDown = false;
+	
+	public MainState() {
+		
+	}
+	
+	public MainState(boolean sd) {
+		spaceDown = sd;
+	}
 	
 	public void init(StateManager manager) {
 		//Load textures for the entire game
@@ -42,6 +51,8 @@ public class MainState implements State {
 		Engine.get().getTextureManager().getTexture("bg", "res/textures/background.png");
 		Engine.get().getTextureManager().getTexture("menubg", "res/textures/menubg.png");
 		Engine.get().getTextureManager().getTexture("truck", "res/textures/brute.png");
+		Engine.get().getTextureManager().getTexture("shop", "res/textures/house.png");
+		Engine.get().getTextureManager().getTexture("introBG", "res/textures/introBG.png");
 		//
 				
 		Engine.get().getTextureManager().getTexture("font-Big", "res/textures/font-Big.png");
@@ -98,6 +109,7 @@ public class MainState implements State {
 		if(labelChanged) {
 			labels.get(oldIndex).setSize(new Vec2(40,40));
 			labels.get(selectedIndex).setSize(new Vec2(60,60));
+			labelChanged = false;
 		}
 		
 		if(!Keyboard.isKeyDown(Keyboard.KEY_DOWN) && !Keyboard.isKeyDown(Keyboard.KEY_S)) {
@@ -110,9 +122,9 @@ public class MainState implements State {
 		titleString.queueForRender();
 		infoString.queueForRender();
 		
-		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE) && !spaceDown) {
 			if(selectedIndex == 0) {
-				manager.setState(new GameState());
+				manager.setState(new IntroState());
 				Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
 			} 
 			if(selectedIndex == 2) {
@@ -120,6 +132,9 @@ public class MainState implements State {
 				Engine.get().GetGameWindow().Stop();
 			}
 		}
+		
+		if(!Keyboard.isKeyDown(Keyboard.KEY_SPACE))
+			spaceDown = false;
 	}
 
 	public void onInit() {
