@@ -57,11 +57,17 @@ public class MainState implements State {
 		backgroundEntity.init(null);
 		backgroundEntity.getRenderable().getMaterial().setDiffuseTexture("bg");
 		
+		//Load audio for entire game
 		try {
-			//Engine.get().getSoundManager().getSound("music", "res/sounds/music1.wav").playAsMusic(1, 0, true);
+			Engine.get().getSoundManager().getSound("music", "res/sounds/music2.wav").playAsMusic(1, 0, true);
+			Engine.get().getSoundManager().getSound("menuSelect", "res/sounds/menuSelect.wav");
+			Engine.get().getSoundManager().getSound("shoot", "res/sounds/shoot.wav");
+			Engine.get().getSoundManager().getSound("hurt", "res/sounds/hurt.wav");
+			Engine.get().getSoundManager().getSound("explosion", "res/sounds/explosion.wav");
 		} catch (Throwable exc) {
 			exc.printStackTrace();
 		}
+		//
 		
 		this.manager = manager;
 	}
@@ -76,6 +82,7 @@ public class MainState implements State {
 			selectedIndex++;
 			labelChanged = true;
 			keyDown = true;
+			Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
 		}
 		
 		if(selectedIndex < 0)
@@ -101,10 +108,14 @@ public class MainState implements State {
 		infoString.queueForRender();
 		
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
-			if(selectedIndex == 0)
+			if(selectedIndex == 0) {
 				manager.setState(new GameState());
-			if(selectedIndex == 2)
+				Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
+			} 
+			if(selectedIndex == 2) {
+				Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
 				Engine.get().GetGameWindow().Stop();
+			}
 		}
 	}
 

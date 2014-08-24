@@ -1,5 +1,6 @@
 package com.djdduty.ld30.game.entities;
 
+import com.djdduty.ld30.core.Engine;
 import com.djdduty.ld30.math.Vec2;
 import com.djdduty.ld30.math.Vec3;
 import com.djdduty.ld30.scene.entity.CollisionEvent;
@@ -49,10 +50,12 @@ public class BruteController extends EntityController {
 	
 	public void onDeath(CollisionEvent event) {
 		event.owner.addScore(50);
+		Engine.get().getSoundManager().getSound("explosion").playAsMusic(1, 0, false);
 	}
 	
 	public void onHurt(CollisionEvent event) {
 		animationTimer = 0;
 		owner.getRenderable().getMaterial().setUvOffset(new Vec2(0.0f,0.5f));
+		Engine.get().getSoundManager().getSound("hurt").playAsMusic(1, 0, false);
 	}
 }

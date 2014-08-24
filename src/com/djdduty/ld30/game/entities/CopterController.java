@@ -57,6 +57,7 @@ public class CopterController extends EntityController {
 				Vec3 projVel = new Vec3(direction.x()*200, direction.y()*200, 0);
 				Projectile proj = new Projectile(new Vec3(-800,0,0), new Vec3(0,0,0), "PlayerProj"+numProjectiles, damage, new Vec2(16,16), null);
 				owner.getScene().addProjectile(proj);
+				Engine.get().getSoundManager().getSound("shoot").playAsMusic(1, 0, false);
 				proj.setOwner(owner);
 				proj.getRenderable().getMaterial().setDiffuseTexture("cannonBall");
 				proj.setVelocity(projVel);
@@ -95,10 +96,12 @@ public class CopterController extends EntityController {
 	
 	public void onDeath(CollisionEvent event) {
 		event.owner.addScore(150);
+		Engine.get().getSoundManager().getSound("explosion").playAsMusic(1, 0, false);
 	}
 	
 	public void onHurt(CollisionEvent event) {
 		animationTimer = 0;
 		owner.getRenderable().getMaterial().setUvOffset(new Vec2(0.0f,0.5f));
+		Engine.get().getSoundManager().getSound("hurt").playAsMusic(1, 0, false);
 	}
 }
