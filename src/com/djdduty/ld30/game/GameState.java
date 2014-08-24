@@ -49,8 +49,8 @@ public class GameState implements State {
 	private float lastMissileDelay = 30;
 	
 	private int numCopters = 0;
-	private float copterDelay = 45;
-	private float lastCopterDelay = 45;
+	private float copterDelay = 30;
+	private float lastCopterDelay = 30;
 	
 	private GameEntity backgroundEntity;
 	public boolean menuOpen = false;
@@ -204,7 +204,7 @@ public class GameState implements State {
 		brute.getRenderable().getMaterial().setDiffuseTexture("truck");
 		numBrutes++;
 		
-		bruteDelay = lastBruteDelay*0.98f;
+		bruteDelay = lastBruteDelay*0.97f;
 		if(bruteDelay < 2)
 			bruteDelay = 2;
 		lastBruteDelay = bruteDelay;
@@ -218,7 +218,7 @@ public class GameState implements State {
 		copter.getRenderable().getMaterial().setDiffuseTexture("copter");
 		numCopters++;
 		
-		copterDelay = lastCopterDelay*0.98f;
+		copterDelay = lastCopterDelay*0.97f;
 		if(copterDelay < 10)
 			copterDelay = 10;
 		lastCopterDelay = copterDelay;

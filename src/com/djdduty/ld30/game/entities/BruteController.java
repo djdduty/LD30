@@ -18,7 +18,7 @@ public class BruteController extends EntityController {
 	
 	public void onInit() {
 		int add = numBrutes*2;
-		owner.setHealth(10+(add*2), 10+(add*2));
+		owner.setHealth(10+(add), 10+(add));
 		speed += add;
 	}
 	
