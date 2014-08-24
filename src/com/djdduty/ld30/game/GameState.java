@@ -65,14 +65,14 @@ public class GameState implements State {
 		scene.addEntity(groundEntity);
 		groundEntity.getRenderable().getMaterial().setDiffuseTexture("bridge");
 		
-		backgroundEntity = new GameEntity(new Vec2(0, 0), "bgEntity", new Vec2(Engine.get().getWidth(), Engine.get().getWidth()));
+		backgroundEntity = new GameEntity(new Vec2(0, 0), "bgEntity", new Vec2(1024,1024));
 		backgroundEntity.init(null);
 		backgroundEntity.getRenderable().getMaterial().setDiffuseTexture("bg");
 		//
 	}
 
 	public void update(double deltaTime) {
-		backgroundEntity.queueForRender();
+		//backgroundEntity.queueForRender();
 		
 		bruteDelay -= deltaTime*0.001f;
 		missileDelay -= deltaTime*0.001f;
@@ -128,7 +128,7 @@ public class GameState implements State {
 	
 	public void createCopter() {
 		numCopters++;
-		GameEntity copter = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-40, (int)(Math.random()*300)+100), "Copter"+numCopters, new Vec2(64, 64), new CopterController(playerEntity));
+		GameEntity copter = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-40, (int)(Math.random()*300)+100), "Copter"+numCopters, new Vec2(128, 128), new CopterController(playerEntity));
 		copter.setHealth(100, 100);
 		copter.mass = 0.0f;
 		mobs.add(copter);

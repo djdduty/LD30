@@ -34,12 +34,12 @@ public class MainState implements State {
 	public void init(StateManager manager) {
 		//Load textures for the entire game
 		Engine.get().getTextureManager().getTexture("test", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("blimpLeft", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("blimpRight", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("cannonBall", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("copter", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("bridge", "res/textures/checker.png");
-		Engine.get().getTextureManager().getTexture("bg", "res/textures/checker.png");
+		Engine.get().getTextureManager().getTexture("blimpLeft", "res/textures/blimpLeft.png");
+		Engine.get().getTextureManager().getTexture("blimpRight", "res/textures/blimp.png");
+		Engine.get().getTextureManager().getTexture("cannonBall", "res/textures/cannonBall.png");
+		Engine.get().getTextureManager().getTexture("copter", "res/textures/Copter.png");
+		Engine.get().getTextureManager().getTexture("bridge", "res/textures/bridge.png");
+		Engine.get().getTextureManager().getTexture("bg", "res/textures/background.png");
 		Engine.get().getTextureManager().getTexture("truck", "res/textures/checker.png");
 		//
 				
@@ -53,12 +53,12 @@ public class MainState implements State {
 		labels.add(new FontString("About", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+80), new Vec2(40,40), font, true));
 		labels.add(new FontString("Exit", new Vec2(Engine.get().getWidth()/2,Engine.get().getHeight()/2+160), new Vec2(40,40), font, true));
 		
-		backgroundEntity = new GameEntity(new Vec2(0, 0), "bgEntity", new Vec2(Engine.get().getWidth(), Engine.get().getWidth()));
+		backgroundEntity = new GameEntity(new Vec2(0, 0), "bgEntity", new Vec2(1024, 1024));
 		backgroundEntity.init(null);
 		backgroundEntity.getRenderable().getMaterial().setDiffuseTexture("bg");
 		
 		try {
-			Engine.get().getSoundManager().getSound("music", "res/sounds/music1.wav").playAsMusic(1, 0, true);
+			//Engine.get().getSoundManager().getSound("music", "res/sounds/music1.wav").playAsMusic(1, 0, true);
 		} catch (Throwable exc) {
 			exc.printStackTrace();
 		}
