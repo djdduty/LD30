@@ -49,7 +49,7 @@ public class PlayerController extends EntityController {
 			Vec3 projVel = new Vec3(direction.x()*500, direction.y()*500, 0);
 			Projectile proj = new Projectile(new Vec3(-800,0,0), new Vec3(0,0,0), "PlayerProj"+numProjectiles, damage, new Vec2(16,16), null);
 			owner.getScene().addProjectile(proj);
-			Engine.get().getSoundManager().getSound("shoot").playAsMusic(1, 0, false);
+			Engine.get().getSoundManager().getSound("shoot").playAsSoundEffect(1, 1, false);
 			proj.setOwner(owner);
 			proj.getRenderable().getMaterial().setDiffuseTexture("cannonBall");
 			proj.setVelocity(projVel);
@@ -86,10 +86,10 @@ public class PlayerController extends EntityController {
 	}
 	
 	public void onDeath(CollisionEvent event) {
-		Engine.get().getSoundManager().getSound("explosion").playAsMusic(1, 0, false);
+		Engine.get().getSoundManager().getSound("explosion").playAsSoundEffect(1, 1, false);
 	}
 	
 	public void onHurt(CollisionEvent event) {
-		Engine.get().getSoundManager().getSound("hurt").playAsMusic(1, 0, false);
+		Engine.get().getSoundManager().getSound("hurt").playAsSoundEffect(1, 1, false);
 	}
 }

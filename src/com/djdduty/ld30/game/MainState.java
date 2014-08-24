@@ -40,7 +40,7 @@ public class MainState implements State {
 		Engine.get().getTextureManager().getTexture("copter", "res/textures/Copter.png");
 		Engine.get().getTextureManager().getTexture("bridge", "res/textures/bridge.png");
 		Engine.get().getTextureManager().getTexture("bg", "res/textures/background.png");
-		Engine.get().getTextureManager().getTexture("truck", "res/textures/checker.png");
+		Engine.get().getTextureManager().getTexture("truck", "res/textures/brute.png");
 		//
 				
 		Engine.get().getTextureManager().getTexture("font-Big", "res/textures/font-Big.png");
@@ -59,7 +59,7 @@ public class MainState implements State {
 		
 		//Load audio for entire game
 		try {
-			Engine.get().getSoundManager().getSound("music", "res/sounds/music2.wav").playAsMusic(1, 0, true);
+			Engine.get().getSoundManager().getSound("music", "res/sounds/music2.wav").playAsMusic(1, 1, true);
 			Engine.get().getSoundManager().getSound("menuSelect", "res/sounds/menuSelect.wav");
 			Engine.get().getSoundManager().getSound("shoot", "res/sounds/shoot.wav");
 			Engine.get().getSoundManager().getSound("hurt", "res/sounds/hurt.wav");
@@ -82,7 +82,7 @@ public class MainState implements State {
 			selectedIndex++;
 			labelChanged = true;
 			keyDown = true;
-			Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
+			Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
 		}
 		
 		if(selectedIndex < 0)
@@ -110,10 +110,10 @@ public class MainState implements State {
 		if(Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
 			if(selectedIndex == 0) {
 				manager.setState(new GameState());
-				Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
+				Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
 			} 
 			if(selectedIndex == 2) {
-				Engine.get().getSoundManager().getSound("menuSelect").playAsMusic(1, 0, false);
+				Engine.get().getSoundManager().getSound("menuSelect").playAsSoundEffect(1, 1, false);
 				Engine.get().GetGameWindow().Stop();
 			}
 		}

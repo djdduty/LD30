@@ -50,12 +50,12 @@ public class BruteController extends EntityController {
 	
 	public void onDeath(CollisionEvent event) {
 		event.owner.addScore(50);
-		Engine.get().getSoundManager().getSound("explosion").playAsMusic(1, 0, false);
+		Engine.get().getSoundManager().getSound("explosion").playAsSoundEffect(1, 1, false);
 	}
 	
 	public void onHurt(CollisionEvent event) {
 		animationTimer = 0;
 		owner.getRenderable().getMaterial().setUvOffset(new Vec2(0.0f,0.5f));
-		Engine.get().getSoundManager().getSound("hurt").playAsMusic(1, 0, false);
+		Engine.get().getSoundManager().getSound("hurt").playAsSoundEffect(1, 1, false);
 	}
 }
