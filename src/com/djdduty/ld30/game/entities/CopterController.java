@@ -80,7 +80,7 @@ public class CopterController extends EntityController {
 			owner.deInit();
 		
 		if(owner.getPosition().x() <= 0) {
-			//TODO: make stirke
+			Engine.get().numStrikes++;
 			owner.deInit();
 		}
 		

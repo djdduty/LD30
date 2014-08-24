@@ -14,6 +14,9 @@ public class Engine {
 	private SoundManager soundManager;
 	private Renderer renderer;
 	
+	//Hacky hacky!
+	public int numStrikes = 0;
+	
 	private Engine() {}
 	
 	public static Engine get() {

@@ -134,7 +134,7 @@ public abstract class GLProgram {
 	}
 	
 	public boolean shouldStop() {
-		return (Keyboard.isKeyDown(Keyboard.KEY_ESCAPE) || shouldStop);
+		return shouldStop;
 	}
 	
 	public void Stop() {

@@ -23,6 +23,7 @@ public class GameState implements State {
 	private Scene scene;
 	private GameEntity playerEntity;
 	private GameEntity groundEntity;
+	private GameEntity upgradeEntity;
 	
 	private int health = 100;
 	private int score = 0;
@@ -30,6 +31,10 @@ public class GameState implements State {
 	
 	private Font font;
 	private FontString scoreLabel;
+	private FontString healthLabel;
+	private FontString strikeLabel;
+	private FontString lostLabel;
+	private FontString lostHelpLabel;
 	
 	private ArrayList<GameEntity> mobs = new ArrayList<>();
 	
@@ -41,24 +46,32 @@ public class GameState implements State {
 	private float lastMissileDelay = 30;
 	
 	private int numCopters = 0;
-	private float copterDelay = 5;
-	private float lastCopterDelay = 5;
+	private float copterDelay = 45;
+	private float lastCopterDelay = 45;
 	
 	private GameEntity backgroundEntity;
+	public boolean menuOpen = false;
+	
+	private StateManager manager;
 	
 	
 	public void init(StateManager manager) {
+		this.manager = manager;
 		scene = new Scene();
 		
-		//setup font/label
+		//setup font/labels
 		Engine.get().getTextureManager().getTexture("font-Big", "res/textures/font.png");
 		font = new Font(13, "font-Big", " !\"#$%&'()*+ ,-./01234567 89:;<=>?@ABC DEFGHIJKLMNO PQRSTUVWXYZ");
 		
 		scoreLabel = new FontString("Score:0", new Vec2(0,0), new Vec2(30,30), font, false);
+		healthLabel = new FontString("Health:100", new Vec2(0,30), new Vec2(30,30), font, false);
+		strikeLabel = new FontString("Strikes:0", new Vec2(0,60), new Vec2(30,30), font, false);
+		lostLabel = new FontString("You lost! Final score:", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2), new Vec2(40,40), font, true);
+		lostHelpLabel = new FontString("Press space to try again.", new Vec2(Engine.get().getWidth()/2, Engine.get().getHeight()/2+30), new Vec2(24,24), font, true);
 		//
 		
 		//setup entities
-		playerEntity = new GameEntity(new Vec2(400, 0), "playerEntity", new Vec2(128, 128), new PlayerController());
+		playerEntity = new GameEntity(new Vec2(400-64, 300-64), "playerEntity", new Vec2(128, 128), new PlayerController());
 		playerEntity.mass = 0.0f;
 		scene.addEntity(playerEntity);
 		playerEntity.getRenderable().getMaterial().setDiffuseTexture("blimpRight");
@@ -72,38 +85,65 @@ public class GameState implements State {
 		backgroundEntity = new GameEntity(new Vec2(0, 0), "bgEntity", new Vec2(1024,1024));
 		backgroundEntity.init(null);
 		backgroundEntity.getRenderable().getMaterial().setDiffuseTexture("bg");
+		
+		upgradeEntity = new GameEntity(new Vec2(200, 500-128), "upgradeEntity", new Vec2(128, 128));
+		upgradeEntity.mass = 0.0f;
+		upgradeEntity.setHealth(2000000000, 2000000000);
+		upgradeEntity.init(scene);
+		upgradeEntity.getRenderable().getMaterial().setDiffuseTexture("test");
 		//
 	}
 
 	public void update(double deltaTime) {
 		backgroundEntity.queueForRender();
+		upgradeEntity.update((float)deltaTime);
+		upgradeEntity.queueForRender();
 		
-		bruteDelay -= deltaTime*0.001f;
-		missileDelay -= deltaTime*0.001f;
-		copterDelay -= deltaTime*0.001f;
-		
-		if(bruteDelay <= 0) {
-			createBrute();
-		}
-		
-		if(copterDelay <= 0) {
-			createCopter();
-		}
-		
-		scene.update((float)deltaTime);
-		
-		for(int i = 0; i < mobs.size(); i++) {
-			mobs.get(i).update((float)deltaTime);
+		if(!menuOpen && strikes < 3 && health > 0) {
+			bruteDelay -= deltaTime*0.001f;
+			missileDelay -= deltaTime*0.001f;
+			copterDelay -= deltaTime*0.001f;
+			
+			if(bruteDelay <= 0) {
+				createBrute();
+			}
+			
+			if(copterDelay <= 0) {
+				createCopter();
+			}
+			
+			scene.update((float)deltaTime);
+			
+			for(int i = 0; i < mobs.size(); i++) {
+				mobs.get(i).update((float)deltaTime);
+			}
 		}
 		
 		scene.queueForRender();
 		
+		if(health != playerEntity.getHealth()) {
+			health = (int) playerEntity.getHealth();
+			healthLabel.setContent("Health:"+health);
+		}
+		
+		if(strikes != Engine.get().numStrikes) {
+			strikes = Engine.get().numStrikes;
+			strikeLabel.setContent("Strikes:"+strikes);
+		}
+		
 		if(score != playerEntity.getScore()) {
 			score = playerEntity.getScore();
 			scoreLabel.setContent("Score:"+score);
+			lostLabel.setContent("You lost! Final score:"+score);
 		}
 		
 		scoreLabel.queueForRender();
+		healthLabel.queueForRender();
+		strikeLabel.queueForRender();
+		if(strikes >= 3 || health <= 0) {
+			lostLabel.queueForRender();
+			lostHelpLabel.queueForRender();
+		}
 		
 		for(int i = 0; i < mobs.size(); i++) {
 			mobs.get(i).queueForRender();
@@ -113,9 +153,23 @@ public class GameState implements State {
 			playerEntity.getRenderable().getMaterial().setDiffuseTexture("blimpRight");
 		else 
 			playerEntity.getRenderable().getMaterial().setDiffuseTexture("blimpLeft");
+		
+		if(upgradeEntity.collides(playerEntity) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			showUpgradeMenu();
+		}
+		
+		if((strikes >= 3 || health <= 0) && Keyboard.isKeyDown(Keyboard.KEY_SPACE)) {
+			manager.setState(new GameState());
+			Engine.get().numStrikes = 0;
+		}
 	}
 	
-	public void createBrute() {
+	private void showUpgradeMenu() {
+		manager.setSubState(new UpgradeMenu(this));
+		menuOpen = true;
+	}
+	
+	private void createBrute() {
 		numBrutes++;
 		GameEntity brute = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-128, 500-128), "Brute"+numBrutes, new Vec2(128, 128), new BruteController());
 		brute.setHealth(20, 20);
@@ -130,7 +184,7 @@ public class GameState implements State {
 		lastBruteDelay = bruteDelay;
 	}
 	
-	public void createCopter() {
+	private void createCopter() {
 		numCopters++;
 		GameEntity copter = new SpriteSheetEntity(new Vec2(Engine.get().getWidth()-40, (int)(Math.random()*300)+100-128), "Copter"+numCopters, new Vec2(128, 128), new CopterController(playerEntity));
 		copter.setHealth(100, 100);
